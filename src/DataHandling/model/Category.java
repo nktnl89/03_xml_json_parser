@@ -8,6 +8,14 @@ import java.util.List;
 public class Category {
     private String name;
 
+    @Override
+    public String toString() {
+        return "Category{" +
+                "name='" + name + '\'' +
+                ", listSubcategories=" + listSubcategories +
+                '}';
+    }
+
     @XmlElementWrapper(name = "subcategories")
     @XmlElement(name = "subcategory")
     private List<Subcategory> listSubcategories = new ArrayList<>();

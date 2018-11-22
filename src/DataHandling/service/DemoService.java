@@ -5,6 +5,11 @@ import DataHandling.repository.impl.CategoryRepository;
 import DataHandling.repository.impl.ProductRepository;
 import DataHandling.repository.impl.SubcategoryRepository;
 import DataHandling.service.impl.CategoryServiceImpl;
+import DataHandling.utils.JsonConverter;
+import DataHandling.utils.XmlConverter;
+import DataHandling.utils.XsdValidator;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.File;
 
@@ -14,6 +19,8 @@ public class DemoService {
     private ProductRepository productRepository = new ProductRepository();
 
     public void startDemo() {
+
+        //это чтобы не хардкодить, берем данные из текстовых файликов
         categoryRepository.setCategories(
                 categoryRepository.getArrayListCategoriesFromFile("src/DataHandling/resources/categories.txt"));
         subcategoryRepository.setSubcategories(
@@ -26,17 +33,36 @@ public class DemoService {
         CategoryList categoryList = new CategoryList();
         categoryList.setCategories(categoryRepository.getCategories());
 
-        CategoryServiceImpl categoryService = new CategoryServiceImpl();
+        XmlConverter xmlConverter = new XmlConverter();
+
+        File xmlFile = new File("src/DataHandling/resources/text.xml");
+        File xsdFile = new File("src/DataHandling/resources/categoryList.xsd");
 
         //здесь выгружаем в xml
-        categoryService.jaxbObjectToXML(categoryList, new File("src/DataHandling/resources/text.xml"));
+        //xmlConverter.categoryListToXML(categoryList, xmlFile);
         //здесь загружаем из xml
-        //CategoryList tmp = categoryService.xmlToJaxbObject(new File("src/DataHandling/resources/text.xml"));
+        //CategoryList tmpList = xmlConverter.xmlToCategoryList(xmlFile);
+//        for (Category category : tmpList.getListCategories()) {
+//            System.out.println(category);
+//        }
         //модель сделать xsd ограничение
+//        XsdValidator xsdValidator = new XsdValidator();
+//        xsdValidator.validateXmlByXsd(xmlFile, xsdFile);
+//        //json
+       // JsonConverter jsonConverter = new JsonConverter();
+        //jsonConverter.categoryListToJson(categoryList);
+//        String tmp = jsonConverter.productToJson(categoryList.getListCategories().get(0).getListSubcategories().get(0).getProducts().get(0));
+//        System.out.println(jsonConverter.productFromJson(tmp));
+//        String tmp = jsonConverter.subcategoryToJson(categoryList.getListCategories().get(0).getListSubcategories().get(0));
+//        System.out.println(jsonConverter.subcategoryFromJson(tmp));
 
+//        String tmp = jsonConverter.categoryToJson(categoryList.getListCategories().get(0));
+//        System.out.println(jsonConverter.categoryFromJson(tmp));
+//        String tmp = jsonConverter.categoryListToJson(categoryList);
+//        System.out.println(jsonConverter.categoryListFromJson(tmp));
 
-        //сделать xsd? сделал генератором, надо дочитать по нему
-        //Конвертер json <=> xml с помощью O/X mappers - JAXB and Jackson/GSon (TODO: Date formatter and JsonIgnore) ??????????????
+        //jsonConverter.categoryToJson(categoryList.getListCategories().get(0));
+
     }
 
 }

@@ -1,7 +1,7 @@
 package DataHandling.model;
 
-import DataHandling.service.ColorAdapter;
-import DataHandling.service.LocalDateAdapter;
+import DataHandling.utils.ColorAdapter;
+import DataHandling.utils.LocalDateAdapter;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -20,6 +20,29 @@ public class Product {
     @XmlAttribute
     private Color color;
     private double price;
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", manufacturer='" + manufacturer + '\'' +
+                ", model='" + model + '\'' +
+                ", manufactureDate=" + manufactureDate +
+                ", color=" + color +
+                ", price=" + price +
+                ", count=" + count +
+                ", subcategory=" + subcategory +
+                '}';
+    }
+
     private int count;
 
     public Product() {

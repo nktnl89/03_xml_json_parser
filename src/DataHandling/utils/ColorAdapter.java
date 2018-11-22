@@ -1,4 +1,4 @@
-package DataHandling.service;
+package DataHandling.utils;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.awt.*;

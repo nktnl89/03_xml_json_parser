@@ -17,4 +17,15 @@ public class CategoryList {
     public List<Category> getListCategories() {
         return listCategories;
     }
+
+    @Override
+    public String toString() {
+        return "CategoryList{" +
+                "listCategories=" + listCategories +
+                '}';
+    }
+
+    public void addCategory(Category category) {
+        listCategories.add(category);
+    }
 }
