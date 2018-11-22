@@ -4,7 +4,6 @@ import DataHandling.model.Category;
 import DataHandling.model.CategoryList;
 
 import javax.xml.bind.*;
-import javax.xml.namespace.QName;
 import javax.xml.stream.*;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
@@ -47,8 +46,8 @@ public class XmlConverter {
             StreamSource streamSource = new StreamSource(file);
 
             XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(streamSource);
-            Category tmpCategory = null;
-            XMLEvent event = null;
+            Category tmpCategory;
+            XMLEvent event;
             JAXBContext jaxbContext = JAXBContext.newInstance(Category.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             CategoryList tmpCategoryList = new CategoryList();
@@ -57,7 +56,6 @@ public class XmlConverter {
                     JAXBElement<Category> jaxbElement = unmarshaller.unmarshal(xmlEventReader, Category.class);
                     tmpCategory = jaxbElement.getValue();
                     tmpCategories.add(tmpCategory);
-                    System.out.println(tmpCategory.getName());
                 } else {
                     xmlEventReader.next();
                 }
@@ -66,9 +64,7 @@ public class XmlConverter {
             xmlEventReader.close();
 
             return tmpCategoryList;
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        } catch (JAXBException e) {
+        } catch (XMLStreamException | JAXBException e) {
             e.printStackTrace();
         }
         return null;

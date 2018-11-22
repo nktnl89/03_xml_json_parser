@@ -5,12 +5,28 @@ import DataHandling.model.CategoryList;
 import DataHandling.model.Product;
 import DataHandling.model.Subcategory;
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 
+import java.io.*;
 import java.lang.reflect.Type;
 
 public class JsonConverter {
-    public String categoryListToJson(CategoryList categoryList) {
+    public void categoryListToJson(CategoryList categoryList, File file) {
+        try (FileWriter fileWriter = new FileWriter(file);) {
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(CategoryList.class, new CategoryListSerializer())
+                    .registerTypeAdapter(Category.class, new CategorySerializer())
+                    .registerTypeAdapter(Subcategory.class, new SubcategorySerializer())
+                    .registerTypeAdapter(Product.class, new ProductSerializer())
+                    .create();
+            gson.toJson(categoryList, fileWriter);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public String categoryListToJson(CategoryList categoryList) {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .registerTypeAdapter(CategoryList.class, new CategoryListSerializer())
@@ -18,18 +34,36 @@ public class JsonConverter {
                 .registerTypeAdapter(Subcategory.class, new SubcategorySerializer())
                 .registerTypeAdapter(Product.class, new ProductSerializer())
                 .create();
-        //gson.toJson(categoryList, System.out);
         return gson.toJson(categoryList);
+
     }
 
     public CategoryList categoryListFromJson(String json) {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(CategoryList.class, new CategoryListDeserializer())
                 .registerTypeAdapter(Category.class, new CategoryDeserializer())
-                .registerTypeAdapter(Subcategory.class, new SubcategorySerializer())
+                .registerTypeAdapter(Subcategory.class, new SubcategoryDeserializer())
                 .registerTypeAdapter(Product.class, new ProductDeserializer())
                 .create();
         return gson.fromJson(json, CategoryList.class);
+    }
+
+    public CategoryList categoryListFromJson(File file) {
+        try (FileReader fileReader = new FileReader(file)) {
+            JsonReader reader = new JsonReader(fileReader);
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(CategoryList.class, new CategoryListDeserializer())
+                    .registerTypeAdapter(Category.class, new CategoryDeserializer())
+                    .registerTypeAdapter(Subcategory.class, new SubcategoryDeserializer())
+                    .registerTypeAdapter(Product.class, new ProductDeserializer())
+                    .create();
+            return gson.fromJson(reader, CategoryList.class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String categoryToJson(Category category) {
@@ -49,6 +83,23 @@ public class JsonConverter {
                 .registerTypeAdapter(Product.class, new ProductDeserializer())
                 .create();
         return gson.fromJson(json, Category.class);
+    }
+
+    public Category categoryFromJson(File file) {
+        try (FileReader fileReader = new FileReader(file)) {
+            JsonReader reader = new JsonReader(fileReader);
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Category.class, new CategoryDeserializer())
+                    .registerTypeAdapter(Subcategory.class, new SubcategorySerializer())
+                    .registerTypeAdapter(Product.class, new ProductDeserializer())
+                    .create();
+            return gson.fromJson(reader, Category.class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String productToJson(Product product) {
@@ -75,12 +126,44 @@ public class JsonConverter {
         return gson.fromJson(json, Product.class);
     }
 
+    public Product productFromJson(File file) {
+        try (FileReader fileReader = new FileReader(file)) {
+            JsonReader reader = new JsonReader(fileReader);
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Product.class, new ProductDeserializer())
+                    .create();
+            return gson.fromJson(reader, Product.class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     public Subcategory subcategoryFromJson(String json) {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Product.class, new ProductDeserializer())
                 .registerTypeAdapter(Subcategory.class, new SubcategoryDeserializer())
                 .create();
         return gson.fromJson(json, Subcategory.class);
+    }
+
+    public Subcategory subcategoryFromJson(File file) {
+        try (FileReader fileReader = new FileReader(file)) {
+            JsonReader reader = new JsonReader(fileReader);
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Product.class, new ProductDeserializer())
+                    .registerTypeAdapter(Subcategory.class, new SubcategoryDeserializer())
+                    .create();
+            return gson.fromJson(reader, Subcategory.class);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private class CategoryListSerializer implements JsonSerializer<CategoryList> {
@@ -198,11 +281,9 @@ public class JsonConverter {
 
         @Override
         public Product deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-
-            JsonObject jsonObject = jsonElement.getAsJsonObject();
-
             Product product = new Product();
             try {
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
                 product.setColor(new ColorAdapter().unmarshal(jsonObject.get("color").getAsString()));
                 product.setCount(jsonObject.get("count").getAsByte());
                 product.setManufacturer(jsonObject.get("manufacturer").getAsString());
@@ -210,11 +291,12 @@ public class JsonConverter {
                 product.setName(jsonObject.get("name").getAsString());
                 product.setPrice(jsonObject.get("price").getAsDouble());
                 product.setManufactureDate(new LocalDateAdapter().unmarshal(jsonObject.get("manufactureDate").getAsString()));
-                return product;
+
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                return product;
             }
-            return null;
         }
     }
 
