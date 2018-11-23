@@ -1,5 +1,6 @@
 package DataHandling.service;
 
+import DataHandling.model.Category;
 import DataHandling.model.CategoryList;
 import DataHandling.repository.impl.CategoryRepository;
 import DataHandling.repository.impl.ProductRepository;
@@ -40,15 +41,19 @@ public class DemoService {
 
         XsdValidator xsdValidator = new XsdValidator();
         if (xsdValidator.validateXmlByXsd(xmlFileInitial, xsdFile)) {
+            //вывод данных из xml
             CategoryList tmpList = xmlConverter.xmlToCategoryList(xmlFileInitial);
+            for (Category category : tmpList.getListCategories()) {
+                System.out.println(category);
+            }
+            //обратно складываем лист категорий в xml
             xmlConverter.categoryListToXML(tmpList, xmlFileFromObject);
             xsdValidator.validateXmlByXsd(xmlFileFromObject, xsdFile);
-            //складываем полученный вначале список в json
+            //складываем полученный список в json
             JsonConverter jsonConverter = new JsonConverter();
             jsonConverter.categoryListToJson(tmpList, jsonFileFromObject);
             //получаем обратно список категорий из только что записанного json и кладем его в xml
-            CategoryList tmp = jsonConverter.categoryListFromJson(jsonFileFromObject);
-            xmlConverter.categoryListToXML(tmp, xmlFromJson);
+            xmlConverter.categoryListToXML(jsonConverter.categoryListFromJson(jsonFileFromObject), xmlFromJson);
             xsdValidator.validateXmlByXsd(xmlFromJson, xsdFile);
         }
     }

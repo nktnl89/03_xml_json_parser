@@ -38,6 +38,7 @@
                                                                                                                                             </xs:restriction>
                                                                                                                                         </xs:simpleType>
                                                                                                                                     </xs:element>
+
                                                                                                                                     <xs:element type="xs:float" name="price"/>
                                                                                                                                     <xs:element name="count">
                                                                                                                                         <xs:simpleType>
@@ -50,11 +51,11 @@
                                                                                                                               </xs:sequence>
 
                                                                                                                                 <xs:attribute name="color" use="required">
-                                                                                                                                        <xs:simpleType>
-                                                                                                                                            <xs:restriction base="xs:string">
-                                                                                                                                                <xs:pattern value="\#[0-9]{6}"/>
-                                                                                                                                            </xs:restriction>
-                                                                                                                                        </xs:simpleType>
+                                                                                                                                    <xs:simpleType>
+                                                                                                                                        <xs:restriction base="xs:string">
+                                                                                                                                            <xs:pattern value="\#[0-9]{6}"/>
+                                                                                                                                        </xs:restriction>
+                                                                                                                                    </xs:simpleType>
                                                                                                                                     </xs:attribute>
                                                                                                                         </xs:complexType>
                                                                                                                   </xs:element>

@@ -20,6 +20,8 @@ public class Product {
     @XmlAttribute
     private Color color;
     private double price;
+    @XmlTransient
+    private Subcategory subcategory;
 
     public String getManufacturer() {
         return manufacturer;
@@ -39,7 +41,6 @@ public class Product {
                 ", color=" + color +
                 ", price=" + price +
                 ", count=" + count +
-                ", subcategory=" + subcategory +
                 '}';
     }
 
@@ -47,9 +48,6 @@ public class Product {
 
     public Product() {
     }
-
-    @XmlTransient
-    private Subcategory subcategory;
 
     public String getName() {
         return name;

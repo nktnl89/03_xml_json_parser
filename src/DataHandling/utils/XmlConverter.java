@@ -46,7 +46,6 @@ public class XmlConverter {
             StreamSource streamSource = new StreamSource(file);
 
             XMLEventReader xmlEventReader = xmlInputFactory.createXMLEventReader(streamSource);
-            Category tmpCategory;
             XMLEvent event;
             JAXBContext jaxbContext = JAXBContext.newInstance(Category.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -54,8 +53,7 @@ public class XmlConverter {
             while ((event = xmlEventReader.peek()) != null) {
                 if (event.isStartElement() && ((StartElement) event).getName().getLocalPart().equals("category")) {
                     JAXBElement<Category> jaxbElement = unmarshaller.unmarshal(xmlEventReader, Category.class);
-                    tmpCategory = jaxbElement.getValue();
-                    tmpCategories.add(tmpCategory);
+                    tmpCategories.add(jaxbElement.getValue());
                 } else {
                     xmlEventReader.next();
                 }

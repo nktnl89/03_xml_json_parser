@@ -58,8 +58,6 @@ public class JsonConverter {
                     .registerTypeAdapter(Product.class, new ProductDeserializer())
                     .create();
             return gson.fromJson(reader, CategoryList.class);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
